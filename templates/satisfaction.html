@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Airline Customer Satisfaction Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        h2{
+            text-align: center;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            margin-left: 5px;
+        }
+
+        .row label, .row input {
+            width: 30%;
+        }
+
+        .row select{
+            height: 38px;
+            width: 55%;
+        }
+        .row input {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            height: 20px;
+            width: 50%;
+        }
+
+        button {
+            padding: 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #result {
+            text-align: center;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Airline Customer Satisfaction Prediction</h1>
+        <form action='/predict' method='POST'>
+            <div class="row">
+                <label for="customer type">Type of Customer</label>
+                <select id="customer type" name='customer type'>
+                    <option value="Loyal Customer">Loyal Customer</option>
+                    <option value="Disloyal Customer">Disloyal Customer</option>
+                </select>
+                <label for="food and drink">Food Rating(1-5)</label>
+                <input type="number" id="food and drink" name="food and drink" min=1 max=5 value="{{request.form['food and drink'] if request.form else '' }}" required>
+                <label for="leg room service">Leg Room Service Rating(1-5)</label>
+                <input type="number" id="leg room service" name="leg room service" min=1 max=5 value="{{request.form['leg room service'] if request.form else '' }}" required>
+            </div>
+            <div class="row">
+                <label for="age">Age of Customer</label>
+                <input type="number" id="age" name="age" min=7 max=100 value="{{request.form['age'] if request.form else '' }}" required>
+                <label for="gate location">Gate Location Rating(1-5)</label>
+                <input type="number" id="gate location" name="gate location" min=1 max=5 value="{{request.form['gate location'] if request.form else '' }}" required>
+                <label for="baggage handling">Baggage Handling Rating(1-5)</label>
+                <input type="number" id="baggage handling" name="baggage handling" min=1 max=5 value="{{request.form['baggage handling'] if request.form else '' }}" required>
+            </div>
+            <div class="row">
+                <label for="type of travel">Type of Travel</label>
+                <select id="type of travel" name="type of travel">
+                    <option value="Business travel">Business Travel</option>
+                    <option value="Personal Travel">Personal Travel</option>
+                </select>
+                <label for="inflight wifi service">WiFi Rating(1-5)</label>
+                <input type="number" id="inflight wifi service" name="inflight wifi service" min=1 max=5 value="{{request.form['inflight wifi service'] if request.form else '' }}" required>
+                <label for="checkin service">Check-in Service Rating(1-5)</label>
+                <input type="number" id="checkin service" name="checkin service" min=1 max=5 value="{{request.form['checkin service'] if request.form else '' }}" required>
+            </div>
+            <div class="row">
+                <label for="class">Class</label>
+                <select id="class" name="class">
+                    <option value="Business">Business</option>
+                    <option value="Economy">Economy</option>
+                    <option value="Economy Plus">Economy Plus</option>
+                </select>
+                <label for="inflight entertainment">Entertainment Rating(1-5)</label>
+                <input type="number" id="inflight entertainment" name="inflight entertainment" min=1 max=5 value="{{request.form['inflight entertainment'] if request.form else '' }}" required>
+                <label for="cleanliness">Cleanliness Rating(1-5)</label>
+                <input type="number" id="cleanliness" name="cleanliness" min=1 max=5 value="{{request.form['cleanliness'] if request.form else '' }}" required>
+            </div>
+            <div class="row">
+                <label for="flight distance">Flight Distance(KM)</label>
+                <input type="number" id="flight distance" name="flight distance" min=50 value="{{request.form['flight distance'] if request.form else '' }}" required>
+                <label for="online support">Online Support Rating(1-5)</label>
+                <input type="number" id="online support" name="online support" min=1 max=5 value="{{request.form['online support'] if request.form else '' }}" required>
+                <label for="online boarding">Online Boarding Rating(1-5)</label>
+                <input type="number" id="online boarding" name="online boarding" min=1 max=5 value="{{request.form['online boarding'] if request.form else '' }}" required>
+            </div>
+            <div class="row">
+                <label for="seat comfort">Seat Comfort Rating(1-5)</label>
+                <input type="number" id="seat comfort" name="seat comfort" min=1 max=5 value="{{request.form['seat comfort'] if request.form else '' }}" required>
+                <label for="ease of online booking">Ease of Online Booking(1-5)</label>
+                <input type="number" id="ease of online booking" name="ease of online booking" min=1 max=5 value="{{request.form['ease of online booking'] if request.form else '' }}" required>
+                <label for="departure delay in minutes">Depature Delay (mins)</label>
+                <input type="number" id="departure delay in minutes" name="departure delay in minutes" min=1 value="{{request.form['departure delay in minutes'] if request.form else '' }}" required>
+            </div>
+            <div class="row">
+                <label for="departure/arrival time convenient">Depature/Arrival Time Convenient Rating(1-5)</label>
+                <input type="number" id="departure/arrival time convenient" name="departure/arrival time convenient" min=1 max=5 value="{{request.form['departure/arrival time convenient'] if request.form else '' }}" required>
+                <label for="oon-board service">On-board Service Rating(1-5)</label>
+                <input type="number" id="on-board service" name="on-board service" min=1 max=5 value="{{request.form['on-board service'] if request.form else '' }}" required>
+                <label for="arrival delay in minutes">Arrival Delay (mins)</label>
+                <input type="number" id="arrival delay in minutes" name="arrival delay in minutes" min=1 value="{{request.form['arrival delay in minutes'] if request.form else '' }}" required>
+            </div>
+            <button type="submit">Predict</button>
+        </form>
+        <h2>{{ text }}</h2>
+    </div>
+</body>
+</html>
